@@ -4,11 +4,14 @@ const mongoose = require('mongoose');
 const chapterRoutes = require('./src/routes/chapterRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const errorHandler = require('./src/middleware/errorHandler');
+const rateLimiter = require('./src/middleware/rateLimiter');
+
 
 const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(rateLimiter);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URL, {

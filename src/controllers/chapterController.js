@@ -1,4 +1,5 @@
 const Chapter = require('../models/chapterSchema');
+const redisClient  = require('../utils/redisClient');
 
 exports.uploadChapters = async (req, res, next) => {
     try {
@@ -82,10 +83,13 @@ exports.uploadChapters = async (req, res, next) => {
         const allFailedChapters = [...failedChapters, ...insertionErrors];
 
         // Invalidate cache when new chapters are added
-        // if (insertedChapters.length > 0) {
-        //   // TODO: Add Redis cache invalidation here
-        //   // await redis.del('chapters:all');
-        // }
+        // After successful insertMany or other DB operation
+        if (insertedChapters.length > 0) {
+            const keys = await redisClient.keys('chapters*');
+            for (const key of keys) {
+                await redisClient.del(key);
+            }
+        }
 
         // Return response with success and failure details
         res.status(insertedChapters.length > 0 ? 201 : 400).json({
@@ -104,34 +108,50 @@ exports.uploadChapters = async (req, res, next) => {
 
 exports.getChapters = async (req, res, next) => {
     try {
-        // filter object from query params
+        // Build filter object from query params
         const filter = {};
         if (req.query.class) filter.class = req.query.class;
         if (req.query.unit) filter.unit = req.query.unit;
         if (req.query.status) filter.status = req.query.status;
-        if (req.query.weakChapters) filter.weakChapters = req.query.weakChapters === 'true';
+        if (req.query.weakChapters) filter.isWeakChapter = req.query.weakChapters === 'true';
         if (req.query.subject) filter.subject = req.query.subject;
 
-        //Pagination
+        // Pagination
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const skip = (page - 1) * limit;
 
+        // Query database
         const totalChapters = await Chapter.countDocuments(filter);
         const chapters = await Chapter.find(filter).skip(skip).limit(limit);
 
-        res.json({
+        // Prepare response object
+        const responseData = {
             success: true,
             totalChapters,
             page,
             limit,
             totalPages: Math.ceil(totalChapters / limit),
             chapters
-        });
+        };
+
+        // Cache the response if caching key exists
+        if (res.locals.cacheKey) {
+            await redisClient.setEx(
+                res.locals.cacheKey,   // Cache key
+                3600,                  // TTL: 1 hour
+                JSON.stringify(responseData)
+            );
+        }
+
+        // Send response
+        res.json(responseData);
+
     } catch (err) {
         next(err);
     }
 };
+
 
 //Search by chapter id
 exports.getChapterById = async (req, res, next) => {
@@ -155,25 +175,25 @@ exports.getChapterById = async (req, res, next) => {
 
 // Search by chapter name 
 exports.getChapterByName = async (req, res, next) => {
-  try {
-    const { term } = req.params;
-    if (!term) {
-      const error = new Error('Search term is required');
-      error.statusCode = 400;
-      throw error;
+    try {
+        const { term } = req.params;
+        if (!term) {
+            const error = new Error('Search term is required');
+            error.statusCode = 400;
+            throw error;
+        }
+
+        // Search for chapters where the chapter name contains the term (case-insensitive)
+        const chapters = await Chapter.find({
+            chapter: { $regex: term, $options: 'i' }
+        });
+
+        if (!chapters.length) {
+            return res.status(404).json({ success: false, message: 'No chapters found' });
+        }
+
+        res.json({ success: true, chapters });
+    } catch (err) {
+        next(err);
     }
-
-    // Search for chapters where the chapter name contains the term (case-insensitive)
-    const chapters = await Chapter.find({
-      chapter: { $regex: term, $options: 'i' }
-    });
-
-    if (!chapters.length) {
-      return res.status(404).json({ success: false, message: 'No chapters found' });
-    }
-
-    res.json({ success: true, chapters });
-  } catch (err) {
-    next(err);
-  }
 };
