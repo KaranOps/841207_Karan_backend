@@ -5,7 +5,7 @@ const chapterRoutes = require('./src/routes/chapterRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const errorHandler = require('./src/middleware/errorHandler');
 const rateLimiter = require('./src/middleware/rateLimiter');
-
+const {dbconnect} = require('./src/config/db.config')
 
 const app = express();
 
@@ -14,12 +14,7 @@ app.use(express.json());
 app.use(rateLimiter);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('MongoDB Connected!'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+dbconnect();
 
 // Routes
 app.use('/api/v1/chapters', chapterRoutes);
