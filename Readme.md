@@ -164,7 +164,7 @@ A public, well-documented Postman collection with pre-populated data :
 
 ## 🙋‍♂️ Author
 
-- [Your Name](https://github.com/KaranOps)
+- [Karan kumar](https://github.com/KaranOps)
 
 ---
 
