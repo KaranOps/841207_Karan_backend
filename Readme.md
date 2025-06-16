@@ -1,8 +1,8 @@
-# MathonGo Backend Assignment
+# Backend Assignment
 
 A robust RESTful backend for the **Chapter Performance Dashboard** as part of the MathonGo Backend Developer assignment.
 
----
+<!-- --- -->
 
 ## 🚀 Features
 
@@ -15,7 +15,7 @@ A robust RESTful backend for the **Chapter Performance Dashboard** as part of th
 - **Error Handling**: Clean, consistent error responses
 - **Production Ready**: Deployed on Render with environment-based configuration
 
----
+<!-- --- -->
 
 ## 🛠️ Tech Stack
 
@@ -26,7 +26,7 @@ A robust RESTful backend for the **Chapter Performance Dashboard** as part of th
 - Multer for file uploads
 - Render (deployment)
 
----
+<!-- --- -->
 <!-- 
 ## 📦 Setup & Installation
 
@@ -88,7 +88,7 @@ The server will run on the port specified in `.env` (default: 3000).
 - `GET /api/v1/chapters/search/:name`  
   Search chapters by name
 
----
+<!-- --- -->
 
 ## 📄 Sample Data
 
@@ -118,7 +118,7 @@ The server will run on the port specified in `.env` (default: 3000).
 ]
 ```
 
----
+<!-- --- -->
 
 <!-- ## 📝 Environment Variables
 
@@ -136,14 +136,14 @@ The server will run on the port specified in `.env` (default: 3000).
 - All routes are limited to **30 requests per minute per IP** using Redis
 - Exceeding this limit returns a `429 Too Many Requests` error
 
----
+<!-- --- -->
 
 ## ⚡ Caching
 
 - `GET /api/v1/chapters` is cached in Redis for 1 hour
 - Cache is invalidated automatically when chapters are uploaded
 
----
+<!-- --- -->
 
 ## 🚀 Deployment
 
@@ -151,14 +151,14 @@ The server will run on the port specified in `.env` (default: 3000).
 
 The backend is deployed on Render with Redis caching and MongoDB Atlas integration. All endpoints are live and ready for testing.
 
----
+
 
 ## 📬 Postman Collection
 
 A public, well-documented Postman collection with pre-populated data : 
-[https://documenter.getpostman.com/view/38222479/2sB2x2KuZb](#) <!-- Replace with your actual public link -->
+[Collection](https://documenter.getpostman.com/view/38222479/2sB2x2KuZb) <!-- Replace with your actual public link -->
 
----
+--- 
 
 
 
