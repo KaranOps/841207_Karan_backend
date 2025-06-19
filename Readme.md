@@ -158,12 +158,13 @@ The backend is deployed on Render with Redis caching and MongoDB Atlas integrati
 A public, well-documented Postman collection with pre-populated data : 
 [Collection](https://documenter.getpostman.com/view/38222479/2sB2x2KuZb) <!-- Replace with your actual public link -->
 
+## 🙋 About Me
 
+Hi! I’m **Karan** 👋 — a full-stack developer passionate about **AI**, **creativity tools**, and building solutions that solve real-world problems.
 
+Let’s connect on [LinkedIn](https://www.linkedin.com/in/karanops93) or check out more of my work on [GitHub](https://github.com/KaranOps).
 
+---
 
-## 🙋‍♂️ Author [Karan](https://github.com/KaranOps)
+Made with ❤️
 
-
-
-**Good luck and happy coding!**
